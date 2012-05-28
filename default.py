@@ -1,6 +1,7 @@
 import re, sys
 import urllib, urllib2
 import xbmc, xbmcgui, xbmcplugin, xbmcaddon
+import showEpisode
 
 
 #Retroware TV, XBMC add-on
@@ -19,16 +20,10 @@ _regex_extractPageUrl = re.compile("'url': '(http://retrowaretv.com/wp-admin/adm
 _regex_extractPageCount = re.compile("<li .*>([0-9]{1,3})</li>")
 
 _regex_extractLatest = re.compile("<div id=\"featured\">(.*?)</div>[ \r\n]*</div>",re.DOTALL)
-_regex_extractLatestEpisode = re.compile("<a href=\"([^\"]*?)\" title=\"([^\"]*?)\" target=\"_self\">[ \r\n]*<img class='absoluteCenter'[ \r\n]*src=\"([^\"]*?)\"[ \r\n]*alt=\"[^\"]*?\"[ \r\n]*/>[ \r\n]*</a>",re.DOTALL)
+_regex_extractLatestEpisode = re.compile("<a href=\"([^\"]*?)\" title=\"([^\"]*?)\" target=\"_self\">[ \r\n]*<img [ \r\n]*src=\"([^\"]*?)\"[ \r\n]*alt=\"[^\"]*?\"[ \r\n]*/>[ \r\n]*</a>",re.DOTALL)
 
 _regex_extractArchiveVideo = re.compile("<td><a title=\"([^\"]*?)\" href=\"([^\"]*?)\" ><img src=\"([^\"]*?)\" alt=\"\" width=\"150\" height=\"150\" /></a></td>")
 
-_regex_extractEpisodeBlipTv = re.compile("(http://blip.tv/play/.*?)(.html|\")");
-_regex_extractVideoFeedURL = re.compile("file=(.*?)&", re.DOTALL);
-_regex_extractVideoFeedURL2 = re.compile("file=(.*)", re.DOTALL);
-
-#http://www.youtube.com/embed/lXL8-k28nos
-_regex_extractEpisodeYouTubeId = re.compile("http://www.youtube.com/(embed|v)/(.*?)(\"|\?|\ |&)");
 
 def mainPage():
     addDirectoryItem('Latest Videos ',{'action':"listLatest","link":"http://retrowaretv.com/"})
@@ -109,15 +104,7 @@ def listArchiveVideos(url):
 
 def playEpisode(url):
     episode_page = LoadPage(url)
-    videoItem = _regex_extractEpisodeBlipTv.search(episode_page)
-    if videoItem is not None:
-        videoLink = videoItem.group(1)
-        showEpisodeBip(videoLink)
-    else:
-        videoItem = _regex_extractEpisodeYouTubeId.search(episode_page)
-        if videoItem is not None:
-            youTubeId = videoItem.group(2)
-            showEpisodeYoutube(youTubeId)
+    showEpisode.showEpisode(episode_page)
 
 def showEpisodeBip(url):    
     #GET the 301 redirect URL
