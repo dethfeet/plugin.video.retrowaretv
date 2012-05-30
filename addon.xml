@@ -14,7 +14,7 @@
 	<provides>video</provides>
 </extension>
 <extension point="xbmc.addon.metadata">
-	<language>EN</language>
+	<language>en</language>
 	<platform>all</platform>
 	<summary>Watch all videos from Retroware TV</summary>
 	<description>RetrowareTV.com is a classic video game review, and information website that is comprised of the Retroware TV online show as well as various independent artists.</description>
