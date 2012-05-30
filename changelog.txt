@@ -1,3 +1,6 @@
+[B]Version 1.1.1[/B]
+- Fixed everything (by dethfeet)
+
 [B]Version 1.1.0[/B]
 - Added "User Submissions" category
 
