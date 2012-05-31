@@ -43,6 +43,7 @@ def listShows():
     addDirectoryItem('RetroActive',{'action':"listVideos",'link' : "http://retrowaretv.com/retroactive/"},"http://www.retrowaretv.com/wp-content/uploads/2011/06/retroactiverwtvbanner.png")
     addDirectoryItem('RetrowareTV The Show',{'action':"listVideos",'link' : "http://retrowaretv.com/retrowaretv-the-show/"},"http://retrowaretv.com/wp-content/uploads/2011/06/rwtvthe-show-logo.png")
     addDirectoryItem('Sold Separately',{'action':"listVideos",'link' : "http://retrowaretv.com/sold-separately/"},"http://retrowaretv.com/wp-content/uploads/2011/06/sold-separately-banner.gif")
+    addDirectoryItem('The Video Game Years',{'action':"listVideos",'link' : "http://retrowaretv.com/the-video-game-years/"},"http://retrowaretv.com/wp-content/uploads/2012/02/tvgypagebanner.png")
     addDirectoryItem('Videogame Knowledge',{'action':"listVideos",'link' : "http://retrowaretv.com/video-game-knowledge/"},"http://retrowaretv.com/wp-content/uploads/2011/06/videogame-knowledge-banner.gif")
 
 def ListArchive():    
