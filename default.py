@@ -19,8 +19,6 @@ _regex_extractEpisodeInfoImg = re.compile("<img src=\"(.*?)\" alt=\".*?\" />",re
 _regex_extractPageUrl = re.compile("'url': '(http://retrowaretv.com/wp-admin/admin-ajax.php\?action=roknewspager&id=widget-roknewspager-[0-9]*&offset=)_OFFSET_")
 _regex_extractPageCount = re.compile("<li .*>([0-9]{1,3})</li>")
 
-_regex_extractLatest = re.compile("<div id=\"featured\">(.*?)</div>[ \r\n]*</div>",re.DOTALL)
-_regex_extractLatestEpisode = re.compile("<a href=\"([^\"]*?)\" title=\"([^\"]*?)\" target=\"_self\">[ \r\n]*<img [ \r\n]*src=\"([^\"]*?)\"[ \r\n]*alt=\"[^\"]*?\"[ \r\n]*/>[ \r\n]*</a>",re.DOTALL)
 
 _regex_extractArchiveVideo = re.compile("<td><a title=\"([^\"]*?)\" href=\"([^\"]*?)\" ><img src=\"([^\"]*?)\" alt=\"\" width=\"150\" height=\"150\" /></a></td>")
 
@@ -32,7 +30,7 @@ def mainPage():
     addDirectoryItem('Archive',{'action':"listArchive"})
         
 def listShows():
-    addDirectoryItem('16-Bit Gems',{'action':"listVideos",'link' : "http://retrowaretv.com/16-bit-gems/"},"http://retrowaretv.com/wp-content/uploads/2011/06/16bitsitebanner-300x84.png")
+    addDirectoryItem('16-Bit Gems',{'action':"listVideos",'link' : "http://retrowaretv.com/category/shows/16bitgems/"},"http://retrowaretv.com/wp-content/uploads/2011/06/16bitsitebanner-300x84.png")
     addDirectoryItem('From Pixels To Plastic',{'action':"listVideos",'link' : "http://retrowaretv.com/pixels-to-plastic/"},"http://retrowaretv.com/wp-content/uploads/2011/06/P2P-Banner-300x128.gif")
     addDirectoryItem('The Game Chasers',{'action':"listVideos",'link' : "http://retrowaretv.com/the-game-chasers/"},"http://retrowaretv.com/wp-content/uploads/2011/07/gamechaserslogo.png")
     addDirectoryItem('Game Quickie',{'action':"listVideos",'link' : "http://retrowaretv.com/game-quickies/"},"http://retrowaretv.com/wp-content/uploads/2011/06/gquickie.png")
@@ -51,12 +49,18 @@ def ListArchive():
 
 def ListLatest(url):
     link = LoadPage(url)
+    _regex_extractLatest = re.compile("<div id=\"featured\">(.*?)</div>",re.DOTALL)
+    _regex_extractLatestEpisode = re.compile("<a href=\"([^\"]*?)\".*?src=\"([^\"]*?)\".*?alt=\"([^\"]*?)\"",re.DOTALL)
+    
+    #<span class="orbit-caption" id="slider-[0-9]*">(.*?)</span>
     latestDiv = _regex_extractLatest.search(link)
     if latestDiv is not None:
+        x = 0
         for latestItem in _regex_extractLatestEpisode.finditer(latestDiv.group(1)):
+            _regex_extractLatestEpisodeName = re.compile("<span class=\"orbit-caption\" id=\"slider-"+str(x)+"\">(.*?)</span>")
             url = latestItem.group(1).strip()
-            name = latestItem.group(2).strip()
-            thumbnail = latestItem.group(3).strip()
+            name = _regex_extractLatestEpisodeName.search(link).group(1)
+            thumbnail = latestItem.group(2).strip()
             embed = True
             for unwanted in unwanteds:
                 if url.find(unwanted) is not -1:
@@ -67,7 +71,7 @@ def ListLatest(url):
                 url = url.replace("../","http://retrowaretv.com/")
                 thumbnail = thumbnail.replace("../","http://retrowaretv.com/")
                 addDirectoryItem(name,{'action':"playEpisode",'link':url},thumbnail,False)
-            
+            x = x+1
 def listVideos(url):
     link = LoadPage(url)
     
@@ -106,30 +110,6 @@ def listArchiveVideos(url):
 def playEpisode(url):
     episode_page = LoadPage(url)
     showEpisode.showEpisode(episode_page)
-
-def showEpisodeBip(url):    
-    #GET the 301 redirect URL
-    req = urllib2.Request(url)
-    response = urllib2.urlopen(req)
-    fullURL = response.geturl()
-    
-    feedURL = _regex_extractVideoFeedURL.search(fullURL)
-    if feedURL is None:
-        feedURL = _regex_extractVideoFeedURL2.search(fullURL)
-    feedURL = urllib.unquote(feedURL.group(1))
-    
-    blipId = feedURL[feedURL.rfind("/")+1:]
-    
-    stream_url = "plugin://plugin.video.bliptv/?action=play_video&videoid=" + blipId
-    item = xbmcgui.ListItem(path=stream_url)
-    return xbmcplugin.setResolvedUrl(thisPlugin, True, item)
-
-def showEpisodeYoutube(youtubeID):
-    stream_url = "plugin://plugin.video.youtube/?action=play_video&videoid=" + youtubeID
-    print stream_url;
-    item = xbmcgui.ListItem(path=stream_url)
-    xbmcplugin.setResolvedUrl(thisPlugin, True, item)
-    return False
 
 def LoadPage(url):
     print url
