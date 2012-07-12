@@ -1,6 +1,6 @@
 import re, sys
 import urllib, urllib2
-import xbmcgui, xbmcplugin
+import xbmcgui, xbmcplugin, xbmcaddon
 import showEpisode
 
 #Retroware TV, XBMC add-on
@@ -9,6 +9,8 @@ import showEpisode
 #@credits: Ricardo "Averre" Ocana Leal for the initial Version of the plugin
 #@version: 1.1.3
 
+addon = xbmcaddon.Addon(id='plugin.video.retrowaretv')
+
 baseLink = "http://retrowaretv.com"
 
 unwanteds = ['podcast', 'retrobeat']
@@ -16,10 +18,10 @@ unwanteds = ['podcast', 'retrobeat']
 thisPlugin = int(sys.argv[1])
 
 def mainPage():
-    addDirectoryItem('Latest Videos ',{'action':"listLatest","link":"http://retrowaretv.com/"})
-    addDirectoryItem('Shows',{'action':"listShows"})
-    addDirectoryItem('User Content',{'action':"listUserContent",'link' : "http://retrowaretv.com/user-blogs/"})
-    addDirectoryItem('Archive',{'action':"listArchive"})
+    addDirectoryItem(addon.getLocalizedString(30000),{'action':"listLatest","link":"http://retrowaretv.com/"})
+    addDirectoryItem(addon.getLocalizedString(30001),{'action':"listShows"})
+    addDirectoryItem(addon.getLocalizedString(30002),{'action':"listUserContent",'link' : "http://retrowaretv.com/user-blogs/"})
+    addDirectoryItem(addon.getLocalizedString(30003),{'action':"listArchive"})
         
 def listShows():
     addDirectoryItem('16-Bit Gems',{'action':"listVideos",'link' : baseLink+"/category/shows/16bitgems/"},baseLink+"/wp-content/uploads/2011/06/16bitsitebanner-300x84.png")
@@ -90,7 +92,7 @@ def listVideos(url):
 	
 	nextPageItem = _regex_extractNextPage.search(link)
 	if nextPageItem is not None:
-		addDirectoryItem('Show more',{'action':"listVideos",'link' : nextPageItem.group(1)},"")
+		addDirectoryItem(addon.getLocalizedString(30004),{'action':"listVideos",'link' : nextPageItem.group(1)},"")
 
 def playEpisode(url):
     episode_page = LoadPage(url)
