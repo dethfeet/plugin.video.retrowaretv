@@ -1,58 +1,59 @@
 import re, sys
 import urllib, urllib2
-import xbmc, xbmcgui, xbmcplugin, xbmcaddon
+import xbmcgui, xbmcplugin
 import showEpisode
-
 
 #Retroware TV, XBMC add-on
 
-#@author: Ricardo "Averre" Ocana Leal
-#@version: 1.1.0
+#@author: dethfeet
+#@credits: Ricardo "Averre" Ocana Leal for the initial Version of the plugin
+#@version: 1.1.3
 
-embedCats = ['retroactive-archive','retroactive-extras','retroactive-game-quickies','pat-the-nes-punk-archive']
+baseLink = "http://retrowaretv.com"
+
 unwanteds = ['podcast', 'retrobeat']
 
 thisPlugin = int(sys.argv[1])
-_regex_extractEpisode = re.compile("<li>.*?<div class=\"roknewspager-div\">(.*?)<a href=\"([^\"]*?)\" class=\"roknewspager-title\">(.*?)</a>.*?<div class=\"introtext\">(.*?)</div>.*?</li>",re.DOTALL)
-_regex_extractEpisodeInfoImg = re.compile("<img src=\"(.*?)\" alt=\".*?\" />",re.DOTALL)
-
-_regex_extractPageUrl = re.compile("'url': '(http://retrowaretv.com/wp-admin/admin-ajax.php\?action=roknewspager&id=widget-roknewspager-[0-9]*&offset=)_OFFSET_")
-_regex_extractPageCount = re.compile("<li .*>([0-9]{1,3})</li>")
-
-
-_regex_extractArchiveVideo = re.compile("<td><a title=\"([^\"]*?)\" href=\"([^\"]*?)\" ><img src=\"([^\"]*?)\" alt=\"\" width=\"150\" height=\"150\" /></a></td>")
-
 
 def mainPage():
     addDirectoryItem('Latest Videos ',{'action':"listLatest","link":"http://retrowaretv.com/"})
     addDirectoryItem('Shows',{'action':"listShows"})
-    addDirectoryItem('User Submissions',{'action':"listVideos",'link' : "http://retrowaretv.com/user-blogs/"})
+    addDirectoryItem('User Content',{'action':"listUserContent",'link' : "http://retrowaretv.com/user-blogs/"})
     addDirectoryItem('Archive',{'action':"listArchive"})
         
 def listShows():
-    addDirectoryItem('16-Bit Gems',{'action':"listVideos",'link' : "http://retrowaretv.com/category/shows/16bitgems/"},"http://retrowaretv.com/wp-content/uploads/2011/06/16bitsitebanner-300x84.png")
-    addDirectoryItem('From Pixels To Plastic',{'action':"listVideos",'link' : "http://retrowaretv.com/pixels-to-plastic/"},"http://retrowaretv.com/wp-content/uploads/2011/06/P2P-Banner-300x128.gif")
-    addDirectoryItem('The Game Chasers',{'action':"listVideos",'link' : "http://retrowaretv.com/the-game-chasers/"},"http://retrowaretv.com/wp-content/uploads/2011/07/gamechaserslogo.png")
-    addDirectoryItem('Game Quickie',{'action':"listVideos",'link' : "http://retrowaretv.com/game-quickies/"},"http://retrowaretv.com/wp-content/uploads/2011/06/gquickie.png")
-    addDirectoryItem('The Gaming Historian',{'action':"listVideos",'link' : "http://retrowaretv.com/the-gaming-historian/"},"http://retrowaretv.com/wp-content/uploads/2011/06/gaming-historian-banner1-300x76.gif")
-    addDirectoryItem('Happy Video Game Nerd',{'action':"listVideos",'link' : "http://retrowaretv.com/happy-video-game-nerd/"},"http://retrowaretv.com/wp-content/uploads/2011/06/HVGN-2.0-sizeb1.png")
-    addDirectoryItem('Let\'s Get!!',{'action':"listVideos",'link' : "http://retrowaretv.com/lets-get/"},"http://retrowaretv.com/wp-content/uploads/2011/06/letsgetbanner-300x189.png")
-    addDirectoryItem('Pat The NES Punk',{'action':"listVideos",'link' : "http://retrowaretv.com/pat-the-nes-punk/"},"http://retrowaretv.com/wp-content/uploads/2011/06/PatNESLogo-300x196.jpg")
-    addDirectoryItem('RetroActive',{'action':"listVideos",'link' : "http://retrowaretv.com/retroactive/"},"http://www.retrowaretv.com/wp-content/uploads/2011/06/retroactiverwtvbanner.png")
-    addDirectoryItem('RetrowareTV The Show',{'action':"listVideos",'link' : "http://retrowaretv.com/retrowaretv-the-show/"},"http://retrowaretv.com/wp-content/uploads/2011/06/rwtvthe-show-logo.png")
-    addDirectoryItem('Sold Separately',{'action':"listVideos",'link' : "http://retrowaretv.com/sold-separately/"},"http://retrowaretv.com/wp-content/uploads/2011/06/sold-separately-banner.gif")
-    addDirectoryItem('The Video Game Years',{'action':"listVideos",'link' : "http://retrowaretv.com/the-video-game-years/"},"http://retrowaretv.com/wp-content/uploads/2012/02/tvgypagebanner.png")
-    addDirectoryItem('Videogame Knowledge',{'action':"listVideos",'link' : "http://retrowaretv.com/video-game-knowledge/"},"http://retrowaretv.com/wp-content/uploads/2011/06/videogame-knowledge-banner.gif")
+    addDirectoryItem('16-Bit Gems',{'action':"listVideos",'link' : baseLink+"/category/shows/16bitgems/"},baseLink+"/wp-content/uploads/2011/06/16bitsitebanner-300x84.png")
+    addDirectoryItem('The Game Chasers',{'action':"listVideos",'link' : baseLink+"/category/shows/the-game-chasers/"},baseLink+"/wp-content/uploads/2012/06/gamechasersbanner2-300x108.png")
+    addDirectoryItem('Game Quickies',{'action':"listVideos",'link' : baseLink+"/category/shows/gamequickies/"},baseLink+"/wp-content/uploads/2011/06/gquickie.png")
+    addDirectoryItem('The Gaming Historian',{'action':"listVideos",'link' : baseLink+"/category/shows/gaminghistorian/"},baseLink+"/wp-content/uploads/2011/06/gaming-historian-banner1-300x76.gif")
+    addDirectoryItem('Happy Video Game Nerd',{'action':"listVideos",'link' : baseLink+"/category/shows/hvgn/"},baseLink+"/wp-content/uploads/2011/06/HVGN-2.0-sizeb1-300x112.png")
+    addDirectoryItem('The Humans Are Coming',{'action':"listVideos",'link' : baseLink+"/category/shows/thehumansarecoming/"},baseLink+"/wp-content/uploads/2012/07/humans-are-coming-logo-3-gray-red-FINAL-300x287.png")
+    addDirectoryItem('Lazy Game Reviews',{'action':"listVideos",'link' : baseLink+"/category/shows/lazy-game-reviews/"},baseLink+"/wp-content/uploads/2012/06/LGRbg4b-300x168.png")
+    addDirectoryItem('Let\'s Get!!',{'action':"listVideos",'link' : baseLink+"/category/shows/letsget/"},baseLink+"/wp-content/uploads/2011/06/letsgetbanner-300x189.png")
+    addDirectoryItem('Pat The NES Punk',{'action':"listVideos",'link' : baseLink+"/category/shows/patnespunk/"},baseLink+"/wp-content/uploads/2011/06/PatNESLogo-300x196.jpg")
+    addDirectoryItem('Pixels To Plastic',{'action':"listVideos",'link' : baseLink+"/category/shows/pixelstoplastic/"},baseLink+"/wp-content/uploads/2011/06/P2P-Banner-300x128.gif")
+    addDirectoryItem('RetroActive',{'action':"listVideos",'link' : baseLink+"/category/shows/retroactive/"},baseLink+"/wp-content/uploads/2011/06/retroactiverwtvbanner-300x95.png")
+    addDirectoryItem('RetrowareTV The Show',{'action':"listVideos",'link' : baseLink+"/category/shows/rwtvshow/"},baseLink+"/wp-content/uploads/2011/06/rwtvthe-show-logo.png")
+    addDirectoryItem('Sold Separately',{'action':"listVideos",'link' : baseLink+"/category/shows/soldseparately/"},baseLink+"/wp-content/uploads/2011/06/sold-separately-banner.gif")
+    addDirectoryItem('Video Game Take-Out ',{'action':"listVideos",'link' : baseLink+"/category/shows/vgto/"},baseLink+"/wp-content/uploads/2012/06/vgtobanner-300x72.png")
+    addDirectoryItem('The Video Game Years',{'action':"listVideos",'link' : baseLink+"/category/shows/the-video-game-years/"},baseLink+"/wp-content/uploads/2012/02/tvgypagebanner.png")
+    addDirectoryItem('Videogame Knowledge',{'action':"listVideos",'link' : baseLink+"/category/shows/video-game-knowledge/"},baseLink+"/wp-content/uploads/2011/06/videogame-knowledge-banner.gif")
+    addDirectoryItem('You Can Play This',{'action':"listVideos",'link' : baseLink+"/category/shows/you-can-play-this-2/"},baseLink+"/wp-content/uploads/2012/06/ycpt-banner-e1340208312357.png")
 
-def ListArchive():    
-    addDirectoryItem('Jam Enslaver',{'action':"listArchiveVideos",'link' : "http://retrowaretv.com/jam-enslaver-2/"},"http://theitochannel.com/wp-content/uploads/2011/06/jamenslaver1.png")
+def ListArchive():
+    addDirectoryItem('Boomstick Reviews',{'action':"listVideos",'link' : baseLink+"/category/archives/boomstick/"},baseLink+"/wp-content/uploads/2011/06/Menu-Button-Boomstick.gif")
+    addDirectoryItem('Jam Enslaver',{'action':"listVideos",'link' : baseLink+"/category/archives/jam-enslaver/"},baseLink+"/wp-content/uploads/2011/06/jamenslaver1.png")
+    addDirectoryItem('When Worlds Collide',{'action':"listVideos",'link' : baseLink+"/category/archives/when-worlds-collide/"},"")
+
+def listUserContent():
+    addDirectoryItem('R Dub Spotlight',{'action':"listVideos",'link' : baseLink+"/category/user-submissions/rdubspotlight/"},"")
+    addDirectoryItem('User Submissions',{'action':"listVideos",'link' : baseLink+"/category/user-submissions/userblogs/"},"")
 
 def ListLatest(url):
     link = LoadPage(url)
     _regex_extractLatest = re.compile("<div id=\"featured\">(.*?)</div>",re.DOTALL)
     _regex_extractLatestEpisode = re.compile("<a href=\"([^\"]*?)\".*?src=\"([^\"]*?)\".*?alt=\"([^\"]*?)\"",re.DOTALL)
-    
-    #<span class="orbit-caption" id="slider-[0-9]*">(.*?)</span>
+
     latestDiv = _regex_extractLatest.search(link)
     if latestDiv is not None:
         x = 0
@@ -72,40 +73,24 @@ def ListLatest(url):
                 thumbnail = thumbnail.replace("../","http://retrowaretv.com/")
                 addDirectoryItem(name,{'action':"playEpisode",'link':url},thumbnail,False)
             x = x+1
-def listVideos(url):
-    link = LoadPage(url)
-    
-    ajax_url = _regex_extractPageUrl.search(link).group(1)
-    ajax_pages = _regex_extractPageCount.findall(link)
-    
-    for i in ajax_pages:
-        url = ajax_url+str((int(i)-1)*5)
-        link = LoadPage(url)
-        
-        for videoItem in _regex_extractEpisode.finditer(link):
-            videoItemImgItem = _regex_extractEpisodeInfoImg.search(videoItem.group(1))
-            name = videoItem.group(3)
-            url = videoItem.group(2)
-            description = videoItem.group(4)
-            thumbnail = ''
-            if videoItemImgItem is not None:
-                thumbnail = videoItemImgItem.group(1)
-            name = remove_html_special_chars(name)
-            url = url.replace("../","http://retrowaretv.com/")
-            thumbnail = thumbnail.replace("../","http://retrowaretv.com/")
-            addDirectoryItem(name,{'action':"playEpisode",'link':url},thumbnail,False)
 
-def listArchiveVideos(url):
-    link = LoadPage(url)
+def listVideos(url):
+	link = LoadPage(url)
+	
+	_regex_extractEpisode = re.compile("<div class=\"postarea\">.*?src=\"(.*?)\".*?href=\"(.*?)\".*?>(.*?)</a>.*?<div class=\"postexcerpt\">(.*?)</div>.*?<hr />",re.DOTALL)
+	_regex_extractNextPage = re.compile("<li><a href=\"(.*)\">&gt;</a></li>")
     
-    for videoItem in _regex_extractArchiveVideo.finditer(link):
-        name = videoItem.group(1)
-        url = videoItem.group(2)
-        thumbnail = videoItem.group(3)
-        name = remove_html_special_chars(name)
-        url = url.replace("../","http://retrowaretv.com/")
-        thumbnail = thumbnail.replace("../","http://retrowaretv.com/")
-        addDirectoryItem(name,{'action':"playEpisode",'link':url},thumbnail,False)
+	for videoItem in _regex_extractEpisode.finditer(link):
+		name = videoItem.group(3)
+		url = videoItem.group(2)
+		description = videoItem.group(4)
+		thumbnail = videoItem.group(1)
+		name = remove_html_special_chars(name)
+		addDirectoryItem(name,{'action':"playEpisode",'link':url},thumbnail,False)
+	
+	nextPageItem = _regex_extractNextPage.search(link)
+	if nextPageItem is not None:
+		addDirectoryItem('Show more',{'action':"listVideos",'link' : nextPageItem.group(1)},"")
 
 def playEpisode(url):
     episode_page = LoadPage(url)
@@ -127,9 +112,9 @@ def remove_html_special_chars(input):
     input = input.replace("&amp;",chr(38))# &
     input = input.replace(r"&quot;", "\"")
     input = input.replace(r"&apos;", "\'")
+    input = input.replace(r"&#8216;", "\'")
     input = input.replace(r"&#8217;", "\'")
     input = input.replace(r"&#8230;", "...")
-    
     return input
 
 def get_params():
@@ -150,14 +135,12 @@ def get_params():
                                 
         return param
 
-
 def addDirectoryItem(name, parameters={}, pic="", folder=True):
     li = xbmcgui.ListItem(name, iconImage="DefaultFolder.png", thumbnailImage=pic)
     if not folder:
         li.setProperty('IsPlayable', 'true')
     url = sys.argv[0] + '?' + urllib.urlencode(parameters)
     return xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=url, listitem=li, isFolder=folder)
-              
 
 if not sys.argv[2]:
     mainPage()
@@ -167,12 +150,12 @@ else:
         listShows()
     elif params['action'] == "listArchive":
         ListArchive()
+    elif params['action'] == "listUserContent":
+        listUserContent()
     elif params['action'] == "listLatest":
         ListLatest(urllib.unquote(params['link']))
     elif params['action'] == "listVideos":
         listVideos(urllib.unquote(params['link']))
-    elif params['action'] == "listArchiveVideos":
-        listArchiveVideos(urllib.unquote(params['link']))
     elif params['action'] == "playEpisode":
         playEpisode(urllib.unquote(params['link']))
     else:
