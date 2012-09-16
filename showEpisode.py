@@ -19,6 +19,7 @@ def showEpisode(episode_page):
         {"function":showEpisodeDorkly, "regex":"http://www.dorkly.com/(e/|moogaloop/noobtube.swf\?clip_id=)([0-9]*)"},
         {"function":showEpisodeSpringboard, "regex":"\.springboardplatform\.com/mediaplayer/springboard/video/(.*?)/(.*?)/(.*?)/"},
         {"function":showEpisodeSpringboard, "regex":"\\$sb\\(\"(.*?)\",{\"sbFeed\":{\"partnerId\":(.*?),\"type\":\"video\",\"contentId\":(.*?),\"cname\":\"(.*?)\"},\"style\":{\"width\":.*?,\"height\":.*?}}\\);"},
+        {"function":showEpisodeSpringboardBitLy, "regex":"<script.*?src=\"http://www.springboardplatform.com/js/overlay\".*? id=\".*?\".*?src=\"(.*?)\".*?</iframe>"},
         {"function":showEpisodeDaylimotion, "regex":"(http://www.dailymotion.com/video/.*?)_"},          
         {"function":showEpisodeGametrailers, "regex":"<a href=\"(http://www.gametrailers.com/video/angry-video-screwattack/(.*))\" target=\"_blank\">"},
         {"function":showEpisodeSpike, "regex":"<a href=\"(http://www.spike.com/.*?)\""},               
@@ -79,7 +80,7 @@ def showEpisodeDorkly(videoItem):
     return False
     
 def showEpisodeSpringboard(videoItem):
-    _regex_extractVideoSpringboardStream = re.compile("<media:content duration=\"[0-9]*?\" medium=\"video\" bitrate=\"[0-9]*?\" fileSize=\"[0-9]*?\" url=\"(.*?)\" type=\".*?\" />");
+    _regex_extractVideoSpringboardStream = re.compile("<media:content duration=\"[0-9]*?\" medium=\"video\" .*? url=\"(.*?)\" type=\".*?\" />");
     
     siteId = videoItem.group(2)
     contentId = videoItem.group(3)
@@ -95,6 +96,20 @@ def showEpisodeSpringboard(videoItem):
     item = xbmcgui.ListItem(path=stream_url)
     xbmcplugin.setResolvedUrl(thisPlugin, True, item)
     return False
+
+def showEpisodeSpringboardBitLy(videoItem):
+    videoLink = videoItem.group(1)
+    #GET the 301 redirect URL
+    req = urllib2.Request(videoLink)
+    response = urllib2.urlopen(req)
+    fullURL = response.geturl()
+    
+    _regex_extractVideoSpringboard = re.compile("(embed_iframe)/(.*?)/video/(.*?)/(.*?)/.*?")
+    
+    videoItem = _regex_extractVideoSpringboard.search(fullURL)
+    
+    return showEpisodeSpringboard(videoItem)
+
 
 def showEpisodeDaylimotion(videoItem):
     url = videoItem.group(1)
