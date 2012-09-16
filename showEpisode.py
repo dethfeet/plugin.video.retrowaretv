@@ -23,6 +23,7 @@ def showEpisode(episode_page):
         {"function":showEpisodeDaylimotion, "regex":"(http://www.dailymotion.com/video/.*?)_"},          
         {"function":showEpisodeGametrailers, "regex":"<a href=\"(http://www.gametrailers.com/video/angry-video-screwattack/(.*))\" target=\"_blank\">"},
         {"function":showEpisodeSpike, "regex":"<a href=\"(http://www.spike.com/.*?)\""},               
+        {"function":playEpisodeMP3, "regex":"href=\"(.*?\.mp3)\""}
     )
     
     for provider in providers:
@@ -168,7 +169,13 @@ def showEpisodeSpike(videoItem):
         item = xbmcgui.ListItem(path=stream_url)
         xbmcplugin.setResolvedUrl(thisPlugin, True, item)
         return False
-    
+
+def playEpisodeMP3(videoItem):
+    stream_url = videoItem.group(1)
+    item = xbmcgui.ListItem(path=stream_url)
+    xbmcplugin.setResolvedUrl(thisPlugin, True, item)
+    return False
+
 def showEpisodeLoadPage(url):
     print url
     req = urllib2.Request(url)
