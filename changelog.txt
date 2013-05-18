@@ -1,4 +1,7 @@
 [B]Version 1.1.8[/B]
+- Fix to comply with official repo requirements
+
+[B]Version 1.1.8[/B]
 - Add new logo
 
 [B]Version 1.1.7[/B]
