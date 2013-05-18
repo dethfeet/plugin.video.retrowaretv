@@ -37,7 +37,7 @@ def listShows():
 def ListArchive():
     shows_page = LoadPage(baseLink)
 	
-    regex_extract_shows = re.compile("Archives</a>\n\t<ul class=\"sub-menu\">(.*?)</ul>\n</li>\n</ul>\n</li>",re.DOTALL)
+    regex_extract_shows = re.compile("Archive</a>\n\t<ul class=\"sub-menu\">(.*?)</ul>\n</li>\n</ul>\n</li>",re.DOTALL)
     shows_ul = regex_extract_shows.search(shows_page).group(1);
     
     regex_extract_show = re.compile("\n\t\t<li id=\".*?\" class=\".*?\"><a href=\"(.*?)\">(.*?)</a></li>");
