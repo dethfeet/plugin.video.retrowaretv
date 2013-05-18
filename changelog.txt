@@ -1,4 +1,5 @@
 [B]Version 1.1.8[/B]
+- Fix archive section
 - Fix to comply with official repo requirements
 
 [B]Version 1.1.8[/B]
