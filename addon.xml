@@ -6,7 +6,6 @@
 	provider-name="dethfeet">
 <requires>
 	<import addon="xbmc.python" version="2.1.0"/>
-    <import addon="plugin.video.bliptv" version="1.8.3"/>
     <import addon="plugin.video.youtube" version="4.4.4"/>
 </requires>
 <extension point="xbmc.python.pluginsource"
@@ -22,6 +21,6 @@
 	<forum>http://forum.xbmc.org/showthread.php?tid=111543</forum>
 	<website>https://github.com/dethfeet/plugin.video.retrowaretv</website>
 	<source>https://github.com/dethfeet/plugin.video.retrowaretv</source>
-	<email>dethfeet@qip.ru</email>
+	<email>dethfeet@gmail.com</email>
   </extension>
 </addon>

@@ -37,6 +37,8 @@ def showEpisodeBip(videoItem):
     _regex_extractVideoFeedURL2 = re.compile("file=(.*)", re.DOTALL);
     _regex_extractVideoFeedURL3 = re.compile("data-episode-id=\"(.*?)\"", re.DOTALL);
 
+    _regex_extractVideoURL = re.compile("<media:content url=\"(.*?)\" blip:role=\"Source\" blip:vcodec=\".*?\" blip:acodec=\".*?\" expression=\".*?\" fileSize=\".*?\" height=\".*?\" isDefault=\"true\" type=\".*?\" width=\".*?\">", re.DOTALL);
+
     videoLink = videoItem.group(1)
     
     #GET the 301 redirect URL
@@ -54,8 +56,11 @@ def showEpisodeBip(videoItem):
     else:#This still needed for older links
         feedURL = urllib.unquote(feedURL.group(1))
         blipId = feedURL[feedURL.rfind("/") + 1:]
+
+    rssURL = "http://blip.tv/rss/flash/"+blipId
+    rssFeed = showEpisodeLoadPage(rssURL)
     
-    stream_url = "plugin://plugin.video.bliptv/?action=play_video&videoid=" + blipId
+    stream_url = _regex_extractVideoURL.search(rssFeed).group(1)
     item = xbmcgui.ListItem(path=stream_url)
     return xbmcplugin.setResolvedUrl(thisPlugin, True, item)
 
